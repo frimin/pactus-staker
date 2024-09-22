@@ -59,13 +59,18 @@ func CreateBondAction(pipline provider.PiplineProvider, index int, optionsConfig
 
 	log.Printf("Pipline %s action %d has %d bond targets", action.pipline.GetName(), index, len(action.validatorAddresses))
 
+	totalStake := amount.Amount(0)
+
 	for i, address := range action.validatorAddresses {
 		amount, _, err := action.pipline.GetValidatorStake(address)
 		if err != nil {
 			return nil, err
 		}
 		log.Printf("%d - %s - stake: %s", i+1, address, amount.String())
+		totalStake += amount
 	}
+
+	log.Printf("Total stake: %s", totalStake.String())
 
 	return action, nil
 }
@@ -276,9 +281,6 @@ func (p *BondAction) Run() error {
 			availableTx = balance - KEEP_FOR_FEE
 
 			log.Printf("[account update] - %s - balance: %s", accountAddress, balance)
-
-			// ensure the transaction is confirmed
-			// time.Sleep(11 * time.Second)
 
 			if balance <= (KEEP_FOR_FEE + MIN_STAKE) {
 				// keep 1 PAC for fee and keep 1 PAC for minimum stake

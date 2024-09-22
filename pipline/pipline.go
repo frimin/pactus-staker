@@ -165,9 +165,15 @@ func createPipline(optionsConfig *config.Options, piplineConfig config.Pipline) 
 		return nil, fmt.Errorf("failed to get all balances: %w", err)
 	}
 
+	totalAmount := amount.Amount(0)
+
 	for i, address := range addresses {
 		log.Printf("%d - %s - balance: %s", i+1, address, amounts[i].String())
+
+		totalAmount += amounts[i]
 	}
+
+	log.Printf("Total balance: %s", totalAmount.String())
 
 	for i, actionConfig := range piplineConfig.Actions {
 		action, err := action.CreateAction(pip, i, optionsConfig, &actionConfig)
