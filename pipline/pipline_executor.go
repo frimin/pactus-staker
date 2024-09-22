@@ -93,15 +93,15 @@ func (p *piplineExecutor) makePendingActions(now time.Time) []*pendingAction {
 	}
 
 	sort.Slice(actions, func(i, j int) bool {
+		if !actions[i].triggerTime.Equal(actions[j].triggerTime) {
+			return actions[i].triggerTime.Before(actions[j].triggerTime)
+		}
+
 		if actions[i].piplineIndex != actions[j].piplineIndex {
 			return actions[i].piplineIndex < actions[j].piplineIndex
 		}
 
-		if actions[i].actionIndex != actions[j].actionIndex {
-			return actions[i].actionIndex < actions[j].actionIndex
-		}
-
-		return actions[i].triggerTime.Before(actions[j].triggerTime)
+		return actions[i].actionIndex < actions[j].actionIndex
 	})
 
 	return actions
