@@ -23,3 +23,11 @@ go.work.sum
 
 # env file
 .env
+
+pactus*
+
+config.yml
+
+__debug*
+
+.vscode
