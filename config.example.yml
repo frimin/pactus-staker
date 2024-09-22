@@ -11,7 +11,6 @@ pipeline:
           password: 123456
     actions:
       - type: "bond"
-        pct: 1
         time: [ "10:38"]
         targets:
           - ./pactus-gui_1.4.0/test/wallets/default_wallet
@@ -22,7 +21,6 @@ pipeline:
           password: 123456
     actions:
       - type: "bond"
-        pct: 1
         time: [ "10:39" ]
         targets:
           - ./pactus-gui_1.4.0/test2/wallets/default_wallet
