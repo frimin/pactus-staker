@@ -34,7 +34,6 @@ type Wallet struct {
 
 type Action struct {
 	Type    string   `yaml:"type"`
-	Pct     float64  `yaml:"pct"`
 	Time    []string `yaml:"time"`
 	Targets []string `yaml:"targets"`
 }
