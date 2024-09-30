@@ -62,11 +62,18 @@ func CreateBondAction(pipline provider.PiplineProvider, index int, optionsConfig
 	totalStake := amount.Amount(0)
 
 	for i, address := range action.validatorAddresses {
-		amount, _, err := action.pipline.GetValidatorStake(address)
+		amount, validatorInfo, err := action.pipline.GetValidatorStake(address)
 		if err != nil {
 			return nil, err
 		}
-		log.Printf("%d - %s - stake: %s", i+1, address, amount.String())
+
+		availabilityScore := 1.0
+
+		if validatorInfo != nil {
+			availabilityScore = validatorInfo.AvailabilityScore
+		}
+
+		log.Printf("%d - %s - stake: %s (score: %v)", i+1, address, amount.String(), availabilityScore)
 		totalStake += amount
 	}
 
