@@ -1,0 +1,27 @@
+options:
+  grpc_server: "localhost:50052"
+  retry_delay: [10,15,30,60]
+  reserve_fees: 1
+pipeline:
+  - name: myname1
+    reward: 
+      wallets:
+        - path: ./pactus-gui_1.4.0/test/wallets/default_wallet
+          password: 123456
+        - path: ./pactus-gui_1.4.0/test2/wallets/default_wallet
+          password: 123456
+    actions:
+      - type: "bond"
+        time: [ "10:38" ]
+        targets:
+          - ./pactus-gui_1.4.0/test/wallets/default_wallet
+  - name: myname2
+    reward: 
+      wallets:
+        - path: ./pactus-gui_1.4.0/test2/wallets/default_wallet
+          password: 123456
+    actions:
+      - type: "bond"
+        time: [ "10:39" ]
+        targets:
+          - ./pactus-gui_1.4.0/test2/wallets/default_wallet

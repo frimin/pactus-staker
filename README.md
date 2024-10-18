@@ -17,17 +17,23 @@ Run without arguments or with arguments (if you need other config filename):
     ./pactus-staker 
     ./pactus-staker -config config.yml
 
+## Windows support
+
+Download & install golang with setup: [go1.23.2.windows-amd64.msi](https://go.dev/dl/go1.23.2.windows-amd64.msi)
+
+Click `build_run.bat` file build and run
+
 # Configuration reference 
 
-`options.grpc_server`: Connect pactus blockchain node grpc address, recommend connect to local node. `localhost:50051` for local mainnet node, `localhost:50052` for local testnet node
+`options.grpc_server`: Connect to a Pactus blockchain node via gRPC. It is recommended to connect to a local node. Use `localhost:50051` for a local mainnet node or `localhost:50052` for a local testnet node. 
 
-`options.retry_delay`: When the action fails, the retry wait time and number of times are listed. If all fail, the action is skipped.
+`options.retry_delay`: When the action fails, the retry wait time and number of attempts are specified. If all attempts fail, the action is skipped.
 
-`options.reserve_fees`: This balance is reserved in each account for transfer fees
+`options.reserve_fees`: This balance is reserved in each account for transfer fees.
 
 `pipeline[*].name`: Pipine name, a pipeline supports multiple actions
 
-`pipelins[*].reward.wallets`:  Broadcast the bond command from the reward address in the specified wallet file
+`pipelins[*].reward.wallets`: Broadcast the bond command from the reward address specified in the wallet file. 
 
 `pipelins[*].reward.wallets[*].path` : Wallet file path
 
@@ -35,7 +41,7 @@ Run without arguments or with arguments (if you need other config filename):
 
 `pipelins[*].actions`: Actions for pipline 
 
-## Bound action
+## Bond action
 
 `pipeline[*].actions[*].type` = `"bond"`
 
@@ -68,14 +74,24 @@ The bond action will attempt to bond each account to each validator in sequence,
 
 Like this:
 
-    account1 -> validator1
-    account1 -> validator2
-    account1 -> validator3
+    reward_wallet1.account1 -> target_wallet1.validator1
+    reward_wallet1.account1 -> target_wallet1.validator2
+    reward_wallet1.account1 -> target_wallet1.validator3
     ...
-    account2 -> validator1
-    account2 -> validator2
-    account2 -> validator3
+    reward_wallet1.account1 -> target_wallet2.validator1
+    reward_wallet1.account1 -> target_wallet2.validator2
+    reward_wallet1.account1 -> target_wallet2.validator3
     ...
+    reward_wallet2.account1 -> target_wallet1.validator1
+    reward_wallet2.account1 -> target_wallet1.validator2
+    reward_wallet2.account1 -> target_wallet1.validator3
+    ...
+    reward_wallet2.account1 -> target_wallet2.validator1
+    reward_wallet2.account1 -> target_wallet2.validator2
+    reward_wallet2.account1 -> target_wallet2.validator3
+    ...
+
+
 
 You can define multiple time points to trigger action execution. While this is possible, it's recommended to execute once a day, as the validator will not enter the committee for one hour after a staking operation, during which you won't receive any block rewards.
 
