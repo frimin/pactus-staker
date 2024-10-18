@@ -1,6 +1,6 @@
 # Pactus-staker
 
-Easy-to-use pactus automatic stake tool
+Pactus automatic stake tool
 
 # Install & Build 
 
