@@ -20,15 +20,23 @@ type BondAction struct {
 	validatorAddressInfo map[string]vault.AddressInfo
 	pipline              provider.PiplineProvider
 	time                 []string
+	reserveFees          amount.Amount
 }
 
 func CreateBondAction(pipline provider.PiplineProvider, index int, optionsConfig *config.Options, actionConfig *config.Action) (*BondAction, error) {
+	reserveFees, err := amount.NewAmount(optionsConfig.ReserveFees)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to create reserve fees: %w", err)
+	}
+
 	action := &BondAction{
 		validatorAddresses:   make([]string, 0),
 		validatorWallet:      make(map[string]*wallet.Wallet),
 		validatorAddressInfo: make(map[string]vault.AddressInfo),
 		pipline:              pipline,
 		time:                 actionConfig.Time,
+		reserveFees:          reserveFees,
 	}
 
 	processedAddresses := map[string]bool{}
@@ -91,9 +99,9 @@ func (p *BondAction) GetName() string {
 }
 
 const (
-	MIN_STAKE    = amount.Amount(1000000000)
-	KEEP_FOR_FEE = MIN_STAKE
-	MAX_STAKE    = amount.Amount(1000000000000)
+	MIN_STAKE = amount.Amount(1000000000)
+	//KEEP_FOR_FEE = MIN_STAKE
+	MAX_STAKE = amount.Amount(1000000000000)
 
 	NEAR_MAX_STAKE = MAX_STAKE - MIN_STAKE
 )
@@ -127,12 +135,12 @@ func (p *BondAction) Run() error {
 
 		log.Printf("[account facts] - %s - balance: %s", accountAddress, balance)
 
-		if balance <= (KEEP_FOR_FEE + MIN_STAKE) {
+		if balance <= (p.reserveFees + MIN_STAKE) {
 			// keep 1 PAC for fee and keep 1 PAC for minimum stake
 			continue
 		}
 
-		availableTx := balance - KEEP_FOR_FEE
+		availableTx := balance - p.reserveFees
 
 		wlt, password := p.pipline.GetAccountWallet(accountAddress)
 
@@ -285,11 +293,11 @@ func (p *BondAction) Run() error {
 			validatorAddresses = validatorAddresses[1:]
 
 			balance -= stakeAvailable + fee
-			availableTx = balance - KEEP_FOR_FEE
+			availableTx = balance - p.reserveFees
 
 			log.Printf("[account update] - %s - balance: %s", accountAddress, balance)
 
-			if balance <= (KEEP_FOR_FEE + MIN_STAKE) {
+			if balance <= (p.reserveFees + MIN_STAKE) {
 				// keep 1 PAC for fee and keep 1 PAC for minimum stake
 				break // to next account
 			}

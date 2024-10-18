@@ -1,6 +1,7 @@
 options:
   grpc_server: "localhost:50052"
   retry_delay: [10,15,30,60]
+  reserve_fees: 1
 pipeline:
   - name: myname1
     reward: 

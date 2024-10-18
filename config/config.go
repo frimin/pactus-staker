@@ -13,8 +13,9 @@ type Config struct {
 }
 
 type Options struct {
-	GrpcServer string `yaml:"grpc_server"`
-	RetryDelay []int  `yaml:"retry_delay"`
+	GrpcServer  string  `yaml:"grpc_server"`
+	RetryDelay  []int   `yaml:"retry_delay"`
+	ReserveFees float64 `yaml:"reserve_fees"`
 }
 
 type Pipline struct {
@@ -44,13 +45,15 @@ func LoadFromFile(file string) (*Config, error) {
 		return nil, err
 	}
 
-	// 创建一个Config结构体实例
 	var config Config
 
-	// 将YAML解析为结构体
 	err = yaml.Unmarshal(data, &config)
 	if err != nil {
 		log.Fatalf("error: %v", err)
+	}
+
+	if config.Options.ReserveFees < 0.01 {
+		config.Options.ReserveFees = 0.01
 	}
 
 	return &config, nil
