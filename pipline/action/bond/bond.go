@@ -157,14 +157,14 @@ func (p *BondAction) Run() error {
 				break
 			}
 
-			switch validatorAddresses[0] {
+			/*switch validatorAddresses[0] {
 			case "tpc1pphac0a0qta6h85y2t45vlj6r6lndyh5szk0et3",
 				"tpc1p9jj07hxw74r6eu33ep9uja522s5ml83hvh0tja",
 				"tpc1pcl7yd9vtqvnefzwl3q2g7r6f4eky66uuqltw5k",
 				"tpc1pjlgtzlk36my0qnzm9krf0jgf6jvs2uafnpqvkg":
 				validatorAddresses = validatorAddresses[1:]
 				continue
-			}
+			}*/
 
 			stake := amount.Amount(0)
 			var validatorInfo *pactus.ValidatorInfo
