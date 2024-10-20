@@ -111,3 +111,9 @@ By default, 1 PAC is reserved as a fee; however, you can lower this amount.
         ...
         reserve_fees: 0.01
         ...
+
+# Donation
+
+If this tool is helpful to you, you can send some PACs to the donation address
+
+    pc1zv02wsursgttvggwj88qffxq6dtw20y725k0xz7
