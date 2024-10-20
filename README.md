@@ -10,7 +10,7 @@ Download this project and enter root folder, run simple build command:
 
     go build
 
-Copy example config to `config.yml` (or other name)
+Copy example config `config.example.yml` to `config.yml` (or other name)
 
 Run without arguments or with arguments (if you need other config filename):
 
