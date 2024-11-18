@@ -1,0 +1,15 @@
+options:
+  grpc_server: "localhost:50051"
+  retry_delay: [10,15,30,60]
+  reserve_fees: 1
+pipeline:
+  - name: my bond 
+    reward: 
+      wallets:
+        - path: ./default_wallet
+          password: 123456
+    actions:
+      - type: "bond"
+        time: [ "10:38" ]
+        targets:
+          - ./default_wallet
