@@ -102,6 +102,7 @@ const (
 	MIN_STAKE = amount.Amount(1000000000)
 	//KEEP_FOR_FEE = MIN_STAKE
 	MAX_STAKE = amount.Amount(1000000000000)
+	MIN_FEE   = amount.Amount(10000000) // 0.01
 
 	NEAR_MAX_STAKE = MAX_STAKE - MIN_STAKE
 )
@@ -219,6 +220,10 @@ func (p *BondAction) Run() error {
 
 			if err != nil {
 				log.Printf("Failed to calculate fee: %v", err)
+			}
+
+			if fee < MIN_FEE {
+				fee = MIN_FEE
 			}
 
 			log.Printf("[validator bond] validator=%v bond=%v fee=%v after=%v", validatorAddresses[0], stakeAvailable, fee, after)
