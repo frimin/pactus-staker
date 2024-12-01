@@ -21,6 +21,7 @@ type BondAction struct {
 	pipline              provider.PiplineProvider
 	time                 []string
 	reserveFees          amount.Amount
+	txFee                amount.Amount
 }
 
 func CreateBondAction(pipline provider.PiplineProvider, index int, optionsConfig *config.Options, actionConfig *config.Action) (*BondAction, error) {
@@ -30,6 +31,12 @@ func CreateBondAction(pipline provider.PiplineProvider, index int, optionsConfig
 		return nil, fmt.Errorf("failed to create reserve fees: %w", err)
 	}
 
+	txFee, err := amount.NewAmount(optionsConfig.TxFee)
+
+	if err != nil {
+		return nil, fmt.Errorf("failed to create tx fee: %w", err)
+	}
+
 	action := &BondAction{
 		validatorAddresses:   make([]string, 0),
 		validatorWallet:      make(map[string]*wallet.Wallet),
@@ -37,6 +44,7 @@ func CreateBondAction(pipline provider.PiplineProvider, index int, optionsConfig
 		pipline:              pipline,
 		time:                 actionConfig.Time,
 		reserveFees:          reserveFees,
+		txFee:                txFee,
 	}
 
 	processedAddresses := map[string]bool{}
@@ -222,9 +230,9 @@ func (p *BondAction) Run() error {
 				log.Printf("Failed to calculate fee: %v", err)
 			}
 
-			/*if fee < MIN_FEE {
-				fee = MIN_FEE
-			}*/
+			if fee < p.txFee {
+				fee = p.txFee
+			}
 
 			log.Printf("[validator bond] validator=%v bond=%v fee=%v after=%v", validatorAddresses[0], stakeAvailable, fee, after)
 

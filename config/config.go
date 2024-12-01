@@ -16,6 +16,7 @@ type Options struct {
 	GrpcServer  string  `yaml:"grpc_server"`
 	RetryDelay  []int   `yaml:"retry_delay"`
 	ReserveFees float64 `yaml:"reserve_fees"`
+	TxFee       float64 `yaml:"tx_fee"`
 }
 
 type Pipline struct {
