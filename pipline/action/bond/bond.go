@@ -8,7 +8,6 @@ import (
 	"github.com/frimin/pactus-staker/config"
 	"github.com/frimin/pactus-staker/pipline/provider"
 	"github.com/pactus-project/pactus/types/amount"
-	"github.com/pactus-project/pactus/types/tx/payload"
 	"github.com/pactus-project/pactus/wallet"
 	"github.com/pactus-project/pactus/wallet/vault"
 	pactus "github.com/pactus-project/pactus/www/grpc/gen/go"
@@ -224,7 +223,7 @@ func (p *BondAction) Run() error {
 				continue
 			}
 
-			fee, err := wlt.CalculateFee(stakeAvailable, payload.TypeBond)
+			/*fee, err := wlt.CalculateFee(stakeAvailable, payload.TypeBond)
 
 			if err != nil {
 				log.Printf("Failed to calculate fee: %v", err)
@@ -232,12 +231,14 @@ func (p *BondAction) Run() error {
 
 			if fee < p.txFee {
 				fee = p.txFee
-			}
+			}*/
+
+			fee := p.txFee
 
 			log.Printf("[validator bond] validator=%v bond=%v fee=%v after=%v", validatorAddresses[0], stakeAvailable, fee, after)
 
 			opts := []wallet.TxOption{
-				wallet.OptionFee(fee),
+				wallet.OptionFee(fee.String()),
 				//wallet.OptionLockTime(uint32(*lockTime)),
 				//wallet.OptionMemo(*memoOpt),
 			}

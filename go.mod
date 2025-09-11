@@ -1,8 +1,6 @@
 module github.com/frimin/pactus-staker
 
-go 1.24.5
-
-toolchain go1.24.7
+go 1.24.7
 
 require (
 	github.com/pactus-project/pactus v1.9.0
