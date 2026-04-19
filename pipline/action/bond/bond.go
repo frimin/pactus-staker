@@ -1,6 +1,7 @@
 package bond
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"time"
@@ -9,14 +10,14 @@ import (
 	"github.com/frimin/pactus-staker/pipline/provider"
 	"github.com/pactus-project/pactus/types/amount"
 	"github.com/pactus-project/pactus/wallet"
-	"github.com/pactus-project/pactus/wallet/vault"
+	wallettypes "github.com/pactus-project/pactus/wallet/types"
 	pactus "github.com/pactus-project/pactus/www/grpc/gen/go"
 )
 
 type BondAction struct {
 	validatorAddresses   []string
 	validatorWallet      map[string]*wallet.Wallet
-	validatorAddressInfo map[string]vault.AddressInfo
+	validatorAddressInfo map[string]wallettypes.AddressInfo
 	pipline              provider.PiplineProvider
 	time                 []string
 	reserveFees          amount.Amount
@@ -39,7 +40,7 @@ func CreateBondAction(pipline provider.PiplineProvider, index int, optionsConfig
 	action := &BondAction{
 		validatorAddresses:   make([]string, 0),
 		validatorWallet:      make(map[string]*wallet.Wallet),
-		validatorAddressInfo: make(map[string]vault.AddressInfo),
+		validatorAddressInfo: make(map[string]wallettypes.AddressInfo),
 		pipline:              pipline,
 		time:                 actionConfig.Time,
 		reserveFees:          reserveFees,
@@ -49,13 +50,13 @@ func CreateBondAction(pipline provider.PiplineProvider, index int, optionsConfig
 	processedAddresses := map[string]bool{}
 
 	for _, target := range actionConfig.Targets {
-		wlt, err := wallet.Open(target, false)
+		wlt, err := wallet.Open(context.Background(), target)
 
 		if err != nil {
 			log.Printf("Failed to open wallet: %v", err)
 		}
 
-		for _, address := range wlt.AllValidatorAddresses() {
+		for _, address := range wlt.ListAddresses(wallet.OnlyValidatorAddresses()) {
 			if _, ok := processedAddresses[address.Address]; ok {
 				log.Printf("ignore duplicate target address: %s", address.Address)
 				continue
@@ -66,7 +67,7 @@ func CreateBondAction(pipline provider.PiplineProvider, index int, optionsConfig
 
 			action.validatorWallet[address.Address] = wlt
 
-			for _, address := range wlt.AllValidatorAddresses() {
+			for _, address := range wlt.ListAddresses(wallet.OnlyValidatorAddresses()) {
 				action.validatorAddressInfo[address.Address] = address
 			}
 		}

@@ -49,7 +49,7 @@ func (p *pipline) GetAllBalance() ([]string, []amount.Amount, error) {
 	amounts := make([]amount.Amount, 0)
 
 	for _, wlt := range p.walletList {
-		for _, address := range wlt.AllAccountAddresses() {
+		for _, address := range wlt.ListAddresses(wallet.OnlyAccountAddresses()) {
 			amount, _ := wlt.Balance(address.Address)
 
 			addresses = append(addresses, address.Address)
@@ -139,9 +139,7 @@ func createPipline(optionsConfig *config.Options, piplineConfig config.Pipline) 
 	}
 
 	for _, rewardWallet := range piplineConfig.Reward.Wallets {
-		wlt, err := wallet.Open(rewardWallet.Path, false,
-			wallet.WithTimeout(TIMEOUT),
-			wallet.WithCustomServers([]string{optionsConfig.GrpcServer}))
+		wlt, err := wallet.Open(pip.ctx, rewardWallet.Path)
 
 		if err != nil {
 			return nil, fmt.Errorf("failed to open wallet: %w", err)
@@ -152,7 +150,7 @@ func createPipline(optionsConfig *config.Options, piplineConfig config.Pipline) 
 	}
 
 	for i, wlt := range pip.walletList {
-		for _, address := range wlt.AllAccountAddresses() {
+		for _, address := range wlt.ListAddresses(wallet.OnlyAccountAddresses()) {
 			pip.accountAddresses[address.Address] = i
 		}
 	}
