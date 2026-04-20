@@ -12,6 +12,7 @@ import (
 
 type PiplineExecutor interface {
 	Run() error
+	ExportValidatorsCsv(filename string) error
 }
 
 type piplineExecutor struct {
