@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-
-	"github.com/pactus-project/pactus/wallet"
 )
 
 func (p *piplineExecutor) ExportValidatorsCsv(filename string) error {
@@ -27,9 +25,9 @@ func (p *piplineExecutor) ExportValidatorsCsv(filename string) error {
 
 	labelIdx := 1
 	for _, pip := range p.piplines {
-		for _, wlt := range pip.walletList {
-			for _, address := range wlt.ListAddresses(wallet.OnlyValidatorAddresses()) {
-				err = writer.Write([]string{address.Address, strconv.Itoa(labelIdx)})
+		for _, action := range pip.actions {
+			for _, address := range action.GetValidatorAddresses() {
+				err = writer.Write([]string{address, strconv.Itoa(labelIdx)})
 				if err != nil {
 					return fmt.Errorf("failed to write row: %w", err)
 				}

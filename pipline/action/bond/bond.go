@@ -106,6 +106,10 @@ func (p *BondAction) GetName() string {
 	return "bond"
 }
 
+func (p *BondAction) GetValidatorAddresses() []string {
+	return p.validatorAddresses
+}
+
 const (
 	MIN_STAKE = amount.Amount(1000000000)
 	//KEEP_FOR_FEE = MIN_STAKE

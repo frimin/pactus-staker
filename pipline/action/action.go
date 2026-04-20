@@ -12,6 +12,7 @@ type Action interface {
 	Run() error
 	GetTime() []string
 	GetName() string
+	GetValidatorAddresses() []string
 }
 
 func CreateAction(pipline provider.PiplineProvider, index int, optionsConfig *config.Options, actionConfig *config.Action) (Action, error) {
