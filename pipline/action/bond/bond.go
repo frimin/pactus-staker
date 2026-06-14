@@ -68,7 +68,7 @@ func CreateBondAction(pipline provider.PiplineProvider, index int, optionsConfig
 			action.validatorWallet[address.Address] = wlt
 
 			for _, address := range wlt.ListAddresses(wallet.OnlyValidatorAddresses()) {
-				action.validatorAddressInfo[address.Address] = address
+				action.validatorAddressInfo[address.Address] = *address
 			}
 		}
 	}
